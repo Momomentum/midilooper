@@ -1,15 +1,35 @@
-@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix midi: <http://lv2plug.in/ns/ext/midi#> .
 @prefix time: <http://lv2plug.in/ns/ext/time#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix urid: <http://lv2plug.in/ns/ext/urid#> .
+@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
+@prefix patch: <http://lv2plug.in/ns/ext/patch#> .
+@prefix state: <http://lv2plug.in/ns/ext/state#> .
+@prefix plug: <http://momomentum.de/midilooper#> .
+
+plug:rec
+    a lv2:Parameter ;
+    rdfs:label "bool" ;
+    rdfs:range atom:Bool ;
+    lv2:default 0 .
+
+<http://momomentum.de/mmg#me>
+    a foaf:Person ;
+    foaf:name "Moritz Mueller-Guthof" ;
+    foaf:mbox <mailto:moritzmg@mailbox.org> ;
+    foaf:homepage <http://momomentum.de> .
 
 <http://momomentum.de/midilooper>
-    a lv2:Plugin ;
-    doap:name "Midi Looper" ;
+    a lv2:Plugin, lv2:MIDIPlugin, doap:Project ;
     doap:license <http://opensource.org/licenses/mit> ;
+    doap:maintainer <http://momomentum.de/mmg#me> ;
+    doap:name "Midi Looper" ;
+    lv2:minorVersion 0 ;
+    lv2:microVersion 0 ;
     lv2:project <http://lv2plug.in/ns/lv2> ;
     lv2:requiredFeature urid:map ;
     lv2:optionalFeature lv2:hardRTCapable ;
@@ -37,4 +57,18 @@
         lv2:index 2 ;
         lv2:symbol "out" ;
         lv2:name "Out"
+    ] , [
+        a lv2:InputPort ,
+                atom:AtomPort ;
+        atom:bufferType atom:Sequence ;
+        atom:supports patch:Message ;
+        atom:supports atom:Object ;
+        lv2:index 3 ;
+        lv2:symbol "param_in" ;
+        lv2:name "Parameter In"
+    ] ;
+    patch:writable plug:rec ;
+    # patch:readable plug:rec ;
+    state:state [
+        plug:rec false ;
     ] .

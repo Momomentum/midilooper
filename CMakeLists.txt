@@ -20,23 +20,29 @@ include(CMakePrintHelpers)
 
 # cmake_print_variables(WAYLAND_CLIENT_LIBRARIES)
 
+set(HDRS
+    src/state_map.h
+    src/uris.h
+)
 
 set(SRCS
     src/midilooper.cpp
 )
 
-add_library(midilooper SHARED ${SRCS})
+add_library(midilooper SHARED ${SRCS} ${SRCS})
 set_target_properties(midilooper PROPERTIES PREFIX "")
 
 target_include_directories(midilooper PRIVATE ${LV2_INCLUDE_DIRS})
 target_link_libraries(midilooper PRIVATE ${LV2_LIBRARIES})
 
-configure_file(manifest.ttl.in 
-    manifest.ttl
-    @ONLY
-)
+configure_file(manifest.ttl.in manifest.ttl @ONLY)
+configure_file(midilooper.ttl midilooper.ttl COPYONLY)
 
-install(TARGETS midilooper DESTINATION lib/lv2)
+install(TARGETS midilooper DESTINATION lv2/midilooper)
+install(FILES 
+    ${CMAKE_CURRENT_BINARY_DIR}/manifest.ttl
+    ${CMAKE_CURRENT_BINARY_DIR}/midilooper.ttl
+    DESTINATION lv2/midilooper)
 
 # Custom command to generate manifest.ttl
 # add_custom_command(TARGET midilooper POST_BUILD
